@@ -1,0 +1,10 @@
+# Nixpacks configuration for deploying the Node.js backend from a monorepo setup
+
+[phases.setup]
+nixPkgs = ["nodejs"]
+
+[phases.install]
+cmds = ["cd backend && npm ci"]
+
+[start]
+cmd = "cd backend && npm start"
