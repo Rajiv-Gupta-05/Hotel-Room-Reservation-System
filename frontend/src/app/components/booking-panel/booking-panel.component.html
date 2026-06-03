@@ -1,0 +1,130 @@
+<div class="booking-panel glass-card">
+
+  <!-- Panel Header -->
+  <div class="panel-header">
+    <h2 class="panel-title">
+      <span>🛎</span> Booking Controls
+    </h2>
+    <div class="availability-badge">
+      <span class="avail-dot"></span>
+      {{ availableCount }} available
+    </div>
+  </div>
+
+  <!-- ── Feedback Messages ─────────────────────────────────────────── -->
+  <div *ngIf="successMessage" class="alert alert-success" role="status">
+    <span>✓</span> {{ successMessage }}
+  </div>
+  <div *ngIf="errorMessage" class="alert alert-error" role="alert">
+    <span>⚠</span> {{ errorMessage }}
+  </div>
+
+  <!-- ── Book Rooms Section ────────────────────────────────────────── -->
+  <section class="panel-section">
+    <h3 class="section-title">Reserve Rooms</h3>
+    <p class="section-desc text-muted text-sm">
+      Enter the number of rooms to book (1–5). The system will automatically
+      select the best available rooms to minimize travel time.
+    </p>
+
+    <form [formGroup]="bookingForm" (ngSubmit)="bookRooms()" novalidate class="booking-form">
+      <div class="form-group">
+        <label class="form-label" for="room-count">Number of Rooms</label>
+        <div class="count-input-row">
+          <input
+            id="room-count"
+            type="number"
+            class="form-input count-input"
+            formControlName="count"
+            min="1"
+            max="5"
+            placeholder="1–5"
+          />
+          <button
+            id="book-rooms-btn"
+            type="submit"
+            class="btn btn-primary"
+            [disabled]="isBooking || availableCount === 0"
+          >
+            <span *ngIf="isBooking" class="spinner"></span>
+            {{ isBooking ? 'Booking...' : 'Book Rooms' }}
+          </button>
+        </div>
+        <span
+          class="field-error"
+          *ngIf="f['count'].touched && (f['count'].errors?.['min'] || f['count'].errors?.['max'])"
+        >
+          Please enter a number between 1 and 5
+        </span>
+      </div>
+    </form>
+
+    <!-- No rooms available notice -->
+    <div *ngIf="availableCount === 0" class="alert alert-error mt-2">
+      <span>🚫</span> No rooms available. Reset or use random occupancy to free up rooms.
+    </div>
+  </section>
+
+  <!-- Divider -->
+  <div class="divider">Demo Controls</div>
+
+  <!-- ── Demo Controls ─────────────────────────────────────────────── -->
+  <section class="panel-section">
+    <!-- Random Occupancy -->
+    <button
+      id="random-occupancy-btn"
+      class="btn btn-success btn-full"
+      (click)="randomOccupancy()"
+      [disabled]="isRandomizing || isResetting || isBooking"
+    >
+      <span *ngIf="isRandomizing" class="spinner"></span>
+      <span *ngIf="!isRandomizing">🎲</span>
+      {{ isRandomizing ? 'Filling rooms...' : 'Random Occupancy' }}
+    </button>
+
+    <p class="helper-text text-muted text-sm">
+      Randomly fills 30–70% of rooms. Use this to test the booking algorithm
+      with realistic occupancy.
+    </p>
+
+    <!-- Reset All -->
+    <button
+      id="reset-all-btn"
+      class="btn btn-danger btn-full"
+      (click)="resetAll()"
+      [disabled]="isResetting || isRandomizing || isBooking"
+    >
+      <span *ngIf="isResetting" class="spinner"></span>
+      <span *ngIf="!isResetting">🔄</span>
+      {{ isResetting ? 'Resetting...' : 'Reset All Bookings' }}
+    </button>
+
+    <p class="helper-text text-muted text-sm">
+      Clears all room bookings and returns the hotel to a fully vacant state.
+    </p>
+  </section>
+
+  <!-- ── Algorithm Info Box ─────────────────────────────────────────── -->
+  <div class="algo-info glass-card">
+    <h4 class="algo-title">📐 How Rooms Are Selected</h4>
+    <ul class="algo-list">
+      <li>
+        <span class="algo-step">1</span>
+        Same-floor rooms are prioritised first
+      </li>
+      <li>
+        <span class="algo-step">2</span>
+        Rooms minimising horizontal travel (1 min/room) are chosen
+      </li>
+      <li>
+        <span class="algo-step">3</span>
+        If cross-floor, vertical travel (2 min/floor) is also minimised
+      </li>
+      <li>
+        <span class="algo-step">4</span>
+        Up to 5 rooms can be booked per request
+      </li>
+    </ul>
+  </div>
+
+</div>

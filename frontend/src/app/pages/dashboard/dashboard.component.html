@@ -1,0 +1,112 @@
+<div class="dashboard-layout">
+
+  <!-- ── Top Navigation Bar ─────────────────────────────────────────── -->
+  <header class="navbar glass-card">
+    <div class="navbar-brand">
+      <span class="brand-icon">🏨</span>
+      <div>
+        <h1 class="brand-name font-serif">Grand Reserve</h1>
+        <span class="brand-tagline">Hotel Room Reservation System</span>
+      </div>
+    </div>
+
+    <div class="navbar-right">
+      <div class="user-chip" *ngIf="authService.currentUser">
+        <div class="user-avatar">
+          {{ authService.currentUser.name.charAt(0).toUpperCase() }}
+        </div>
+        <div class="user-info">
+          <span class="user-name">{{ authService.currentUser.name }}</span>
+          <span class="user-email text-muted text-sm">{{ authService.currentUser.email }}</span>
+        </div>
+      </div>
+      <button id="logout-btn" class="btn btn-secondary" (click)="logout()">
+        Sign Out
+      </button>
+    </div>
+  </header>
+
+  <!-- ── Stats Bar ──────────────────────────────────────────────────── -->
+  <div class="stats-bar">
+    <div class="stat-card glass-card">
+      <div class="stat-icon stat-icon-total">🏢</div>
+      <div class="stat-info">
+        <span class="stat-value">{{ totalRooms }}</span>
+        <span class="stat-label">Total Rooms</span>
+      </div>
+    </div>
+
+    <div class="stat-card glass-card">
+      <div class="stat-icon stat-icon-available">✅</div>
+      <div class="stat-info">
+        <span class="stat-value text-success">{{ availableRooms }}</span>
+        <span class="stat-label">Available</span>
+      </div>
+    </div>
+
+    <div class="stat-card glass-card">
+      <div class="stat-icon stat-icon-booked">🔴</div>
+      <div class="stat-info">
+        <span class="stat-value text-danger">{{ bookedRooms }}</span>
+        <span class="stat-label">Occupied</span>
+      </div>
+    </div>
+
+    <div class="stat-card glass-card">
+      <div class="stat-icon stat-icon-occupancy">📊</div>
+      <div class="stat-info">
+        <span class="stat-value">{{ occupancyPercent }}%</span>
+        <span class="stat-label">Occupancy Rate</span>
+      </div>
+      <!-- Occupancy progress bar -->
+      <div class="occupancy-bar">
+        <div class="occupancy-fill" [style.width.%]="occupancyPercent"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ── Booking Result Banner ──────────────────────────────────────── -->
+  <div *ngIf="lastBookingResult" class="booking-result-banner glass-card" role="status">
+    <div class="result-icon">🎉</div>
+    <div class="result-info">
+      <strong>Booking Confirmed!</strong>
+      <span>
+        Rooms {{ lastBookingResult.roomNumbers.join(', ') }} booked
+        {{ lastBookingResult.isSameFloor ? 'on the same floor' : 'across floors' }}.
+        Total travel time: <strong>{{ lastBookingResult.travelTime }} min</strong>.
+      </span>
+    </div>
+    <button class="close-result" (click)="lastBookingResult = null">✕</button>
+  </div>
+
+  <!-- ── Error State ────────────────────────────────────────────────── -->
+  <div *ngIf="loadError" class="alert alert-error">
+    <span>⚠</span> {{ loadError }}
+  </div>
+
+  <!-- ── Loading State ──────────────────────────────────────────────── -->
+  <div *ngIf="isLoadingRooms && !loadError" class="loading-state">
+    <div class="loading-spinner-lg"></div>
+    <p class="text-muted">Loading hotel rooms...</p>
+  </div>
+
+  <!-- ── Main Content ───────────────────────────────────────────────── -->
+  <main *ngIf="!isLoadingRooms" class="main-content">
+
+    <!-- Left: Booking Panel (controls) -->
+    <aside class="sidebar">
+      <app-booking-panel
+        [rooms]="rooms"
+        (bookingComplete)="onBookingComplete($event)"
+        (occupancyChanged)="onOccupancyChanged()"
+      ></app-booking-panel>
+    </aside>
+
+    <!-- Right: Hotel Grid (visualization) -->
+    <section class="grid-section">
+      <app-hotel-grid [rooms]="rooms"></app-hotel-grid>
+    </section>
+
+  </main>
+
+</div>

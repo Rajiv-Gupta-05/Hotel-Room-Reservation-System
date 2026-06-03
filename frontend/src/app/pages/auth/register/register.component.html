@@ -1,0 +1,102 @@
+<div class="auth-wrapper">
+  <div class="orb orb-1"></div>
+  <div class="orb orb-2"></div>
+
+  <div class="auth-card glass-card">
+    <!-- Branding -->
+    <div class="auth-header">
+      <div class="hotel-icon">🏨</div>
+      <h1 class="font-serif">Grand Reserve</h1>
+      <p class="auth-subtitle">Hotel Room Reservation System</p>
+    </div>
+
+    <h2 class="form-title">Create account</h2>
+    <p class="form-description text-muted">Join us to start booking rooms</p>
+
+    <!-- Error alert -->
+    <div *ngIf="errorMessage" class="alert alert-error mt-3" role="alert">
+      <span>⚠</span> {{ errorMessage }}
+    </div>
+
+    <!-- Registration Form -->
+    <form [formGroup]="registerForm" (ngSubmit)="onSubmit()" class="auth-form" novalidate>
+
+      <!-- Name Field -->
+      <div class="form-group">
+        <label class="form-label" for="reg-name">Full Name</label>
+        <input
+          id="reg-name"
+          type="text"
+          class="form-input"
+          formControlName="name"
+          placeholder="Rajiv Gupta"
+          autocomplete="name"
+          [class.input-error]="f['name'].invalid && f['name'].touched"
+        />
+        <span class="field-error" *ngIf="f['name'].touched && f['name'].errors?.['required']">
+          Name is required
+        </span>
+        <span class="field-error" *ngIf="f['name'].touched && f['name'].errors?.['minlength']">
+          Name must be at least 2 characters
+        </span>
+      </div>
+
+      <!-- Email Field -->
+      <div class="form-group">
+        <label class="form-label" for="reg-email">Email Address</label>
+        <input
+          id="reg-email"
+          type="email"
+          class="form-input"
+          formControlName="email"
+          placeholder="you@example.com"
+          autocomplete="email"
+          [class.input-error]="f['email'].invalid && f['email'].touched"
+        />
+        <span class="field-error" *ngIf="f['email'].touched && f['email'].errors?.['required']">
+          Email is required
+        </span>
+        <span class="field-error" *ngIf="f['email'].touched && f['email'].errors?.['email']">
+          Please enter a valid email
+        </span>
+      </div>
+
+      <!-- Password Field -->
+      <div class="form-group">
+        <label class="form-label" for="reg-password">Password</label>
+        <input
+          id="reg-password"
+          type="password"
+          class="form-input"
+          formControlName="password"
+          placeholder="Min. 6 characters"
+          autocomplete="new-password"
+          [class.input-error]="f['password'].invalid && f['password'].touched"
+        />
+        <span class="field-error" *ngIf="f['password'].touched && f['password'].errors?.['required']">
+          Password is required
+        </span>
+        <span class="field-error" *ngIf="f['password'].touched && f['password'].errors?.['minlength']">
+          Password must be at least 6 characters
+        </span>
+      </div>
+
+      <!-- Submit -->
+      <button
+        id="register-submit-btn"
+        type="submit"
+        class="btn btn-primary btn-full mt-4"
+        [disabled]="isLoading"
+      >
+        <span *ngIf="isLoading" class="spinner"></span>
+        {{ isLoading ? 'Creating account...' : 'Create Account' }}
+      </button>
+    </form>
+
+    <!-- Login Link -->
+    <div class="auth-footer">
+      <span class="text-muted text-sm">Already have an account?</span>
+      <a routerLink="/login" id="goto-login-link">Sign in</a>
+    </div>
+  </div>
+</div>

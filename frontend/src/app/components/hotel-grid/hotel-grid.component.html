@@ -1,0 +1,62 @@
+<div class="hotel-grid-container glass-card">
+
+  <!-- Header -->
+  <div class="grid-header">
+    <h2 class="grid-title">
+      <span class="title-icon">🏢</span>
+      Hotel Floor Plan
+    </h2>
+    <!-- Legend -->
+    <div class="legend">
+      <div class="legend-item">
+        <div class="legend-dot dot-available"></div>
+        <span>Available</span>
+      </div>
+      <div class="legend-item">
+        <div class="legend-dot dot-booked"></div>
+        <span>Occupied</span>
+      </div>
+      <div class="legend-item">
+        <div class="legend-dot dot-new"></div>
+        <span>Just Booked</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- Building structure indicator -->
+  <div class="building-label">
+    <span class="lift-label">🛗 Lift / Stairs →</span>
+    <span class="rooms-label">← Room positions (left = nearest to lift)</span>
+  </div>
+
+  <!-- Floor Grid -->
+  <div class="floors-container">
+    <div
+      *ngFor="let floorRow of floorRows"
+      class="floor-row"
+    >
+      <!-- Floor Label -->
+      <div class="floor-label">
+        <span class="floor-number">{{ floorRow.floor }}</span>
+        <span class="floor-text">{{ floorRow.floor === 10 ? 'Top' : 'F' }}</span>
+      </div>
+
+      <!-- Room Cells -->
+      <div class="rooms-row">
+        <div
+          *ngFor="let room of floorRow.rooms"
+          [class]="getRoomClass(room)"
+          [title]="getRoomTooltip(room)"
+          [id]="'room-' + room.roomNumber"
+          [attr.aria-label]="getRoomTooltip(room)"
+        >
+          <span class="room-number">{{ room.roomNumber }}</span>
+
+          <!-- Newly booked pulse indicator -->
+          <span *ngIf="room.isNewlyBooked" class="new-badge">NEW</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</div>
