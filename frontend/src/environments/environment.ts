@@ -5,5 +5,5 @@
  */
 export const environment = {
   production: false,
-  apiUrl: 'http://localhost:5001/api',
+  apiUrl: 'https://hotel-room-reservation-system-production-6042.up.railway.app/api',
 };

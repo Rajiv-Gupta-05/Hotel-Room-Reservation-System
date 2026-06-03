@@ -13,8 +13,19 @@ const PORT = process.env.PORT || 5001;
 
 connectDB().then(() => seedRooms());
 
+const allowedOrigins = ['http://localhost:4200', 'http://localhost:4201', 'http://localhost:4202'];
+if (process.env.FRONTEND_URL) {
+  allowedOrigins.push(...process.env.FRONTEND_URL.split(',').map(url => url.trim()));
+}
+
 app.use(cors({
-  origin: ['http://localhost:4200', 'http://localhost:4201', 'http://localhost:4202'],
+  origin: (origin, callback) => {
+    if (!origin || allowedOrigins.includes(origin)) {
+      callback(null, true);
+    } else {
+      callback(new Error('Not allowed by CORS'));
+    }
+  },
   credentials: true,
 }));
 app.use(express.json());
